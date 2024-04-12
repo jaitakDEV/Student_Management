@@ -11,7 +11,7 @@ const Heading = () => {
         <div className="flex mb-4">
           <NavLink
             to="/institutedata"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l mr-2 focus:outline-none focus:shadow-outline"
+            className="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l mr-2 focus:outline-none focus:shadow-outline"
           >
             Institute Master
           </NavLink>
