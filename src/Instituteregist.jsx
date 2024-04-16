@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Formik, useFormik } from "formik";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignupSchema = Yup.object().shape({
   institutename: Yup.string()
@@ -14,7 +16,7 @@ const SignupSchema = Yup.object().shape({
     .required("Required"),
   emailid: Yup.string().email("Invalid email").required("Required"),
   contactno: Yup.string()
-    .matches(/^\d+$/, "Invalid phone number")
+    .matches(/^\d+$/, "Invalid phone number") // react expression to check string that consits only digit
     .min(10, "Too Short!!")
     .max(11, "Too Long")
     .required("Required"),
@@ -27,7 +29,6 @@ const SignupSchema = Yup.object().shape({
 const Instituteregist = () => {
   const [formdata, setformdata] = useState([]);
   const [selectedState, setSelectedState] = useState();
-  const [selectInstitute, setSelectInstitute] = useState();
 
   const formik = useFormik({
     // we have to initialize all feild
@@ -45,8 +46,19 @@ const Instituteregist = () => {
     validationSchema: SignupSchema,
     onSubmit: (values) => {
       setformdata([...formdata, values]);
-      alert("data saved");
-
+      toast.success(" Submitted! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      setTimeout(function () {
+        window.location.replace("/institutedata");
+      }, 5000);
       formik.resetForm();
     },
   });
@@ -62,6 +74,18 @@ const Instituteregist = () => {
 
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="flex justify-end mb-4">
         <NavLink
           to="/"
@@ -147,11 +171,11 @@ const Instituteregist = () => {
                 value={formik.values.state}
                 onChange={handleStatechange}
               >
-                <option>Select State:</option>
-                <option>Rajasthan</option>
-                <option>Delhi</option>
-                <option>Mumbai</option>
-                <option>Uttarpradesh</option>
+                <option value="">Select State</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Uttarpradesh">Uttarpradesh</option>
               </select>
               {formik.errors.state && formik.touched.state && (
                 <div className="text-red-500">{formik.errors.state}</div>
@@ -176,7 +200,7 @@ const Instituteregist = () => {
                 )}
                 {selectedState === "Delhi" && (
                   <>
-                    <option value="Centaral Delhi">Central Delhi</option>
+                    <option value="Central Delhi">Central Delhi</option>
                     <option value="New Delhi">New Delhi</option>
                   </>
                 )}
@@ -226,7 +250,6 @@ const Instituteregist = () => {
                 name="status"
                 value={formik.values.status}
                 onChange={formik.handleChange}
-                // disabled={!selectInstitute} //disabled when institute type is not selected
               >
                 <option>Select status:</option>
                 <option>Mens</option>
@@ -248,10 +271,10 @@ const Instituteregist = () => {
             </button>
 
             <NavLink
-              to="/institutedata"
+              to="/"
               className="items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Cancle
+              Cancel
             </NavLink>
           </div>
         </form>

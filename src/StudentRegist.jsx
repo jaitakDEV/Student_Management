@@ -1,10 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { Formik, useFormik } from "formik";
 import { NavLink } from "react-router-dom";
+import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const SignupSchema = Yup.object().shape({
+  firstname: Yup.string()
+    .min(3, "Too short!!")
+    .max(20, "Too Long!!")
+    .required("required"),
+  lastname: Yup.string()
+    .min(3, "Too Short!!")
+    .max(20, "Too Long!!")
+    .required("required"),
+  emailid: Yup.string().email("Invalid email").required("Required"),
+  contactno: Yup.string()
+    .matches(/^\d+$/, "Invalid phone number") // react expression to check string that consits only digit
+    .min(10, "Too Short!!")
+    .max(11, "Too Long")
+    .required("Required"),
+  address: Yup.string()
+    .min(5, "Too Short!!")
+    .max(35, "Too Long!!")
+    .required("Required"),
+  state: Yup.string().required("Required"),
+  city: Yup.string().required("Required"),
+  institutename: Yup.string().required("Required"),
+});
 
 const StudentRegist = () => {
   const [sformdata, setsformdata] = useState([]);
   const [institutedata, setinstitutedata] = useState([]);
+  const [selectedState, setSelectedState] = useState();
+
+  // const history = useHistory(); // Initialize useHistory hook
+
   const formik = useFormik({
     // we have to initialize all feild
     initialValues: {
@@ -17,11 +48,25 @@ const StudentRegist = () => {
       city: "",
       institutename: "",
     },
+
+    validationSchema: SignupSchema,
     onSubmit: (values) => {
       setsformdata([...sformdata, values]);
-      alert("data saved");
+      toast.success(" Submitted!! ", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
 
-      formik.resetForm({});
+      setTimeout(function () {
+        window.location.replace("/studentdata");
+      }, 5000);
+      formik.resetForm();
     },
   });
 
@@ -30,8 +75,25 @@ const StudentRegist = () => {
     setinstitutedata(JSON.parse(localStorage.getItem("formdata") || "[]"));
   }, [sformdata]);
 
+  const handleStatechange = (e) => {
+    setSelectedState(e.target.value);
+    formik.handleChange(e);
+  };
+
   return (
     <>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       <div className="flex justify-end mb-4">
         <NavLink
           to="/"
@@ -54,6 +116,9 @@ const StudentRegist = () => {
                 value={formik.values.firstname}
                 onChange={formik.handleChange}
               />
+              {formik.errors.firstname && formik.touched.firstname && (
+                <div className="text-red-500">{formik.errors.firstname}</div>
+              )}
             </div>
             <div className="w-1/2 ml-2">
               <label className="block mb-2">Last Name</label>
@@ -64,6 +129,9 @@ const StudentRegist = () => {
                 value={formik.values.lastname}
                 onChange={formik.handleChange}
               />
+              {formik.errors.lastname && formik.touched.lastname && (
+                <div className="text-red-500">{formik.errors.lastname}</div>
+              )}
             </div>
           </div>
 
@@ -77,6 +145,9 @@ const StudentRegist = () => {
                 value={formik.values.emailid}
                 onChange={formik.handleChange}
               />
+              {formik.errors.emailid && formik.touched.emailid && (
+                <div className="text-red-500">{formik.errors.emailid}</div>
+              )}
             </div>
             <div className="w-1/2 ml-2">
               <label className="block mb-2">Contact No</label>
@@ -87,6 +158,9 @@ const StudentRegist = () => {
                 value={formik.values.contactno}
                 onChange={formik.handleChange}
               />
+              {formik.errors.contactno && formik.touched.contactno && (
+                <div className="text-red-500">{formik.errors.contactno}</div>
+              )}
             </div>
           </div>
 
@@ -100,6 +174,9 @@ const StudentRegist = () => {
                 value={formik.values.address}
                 onChange={formik.handleChange}
               />
+              {formik.errors.address && formik.touched.address && (
+                <div className="text-red-500">{formik.errors.address}</div>
+              )}
             </div>
             <div className="w-1/2 ml-2">
               <label className="block mb-2">State</label>
@@ -107,12 +184,17 @@ const StudentRegist = () => {
                 className="w-full border rounded py-2 px-3"
                 name="state"
                 value={formik.values.state}
-                onChange={formik.handleChange}
+                onChange={handleStatechange}
               >
                 <option value="">Select State</option>
-                <option value="State1">State 1</option>
-                <option value="State2">State 2</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Uttarpradesh">Uttarpradesh</option>
               </select>
+              {formik.errors.state && formik.touched.state && (
+                <div className="text-red-500">{formik.errors.state}</div>
+              )}
             </div>
           </div>
 
@@ -124,11 +206,37 @@ const StudentRegist = () => {
                 name="city"
                 value={formik.values.city}
                 onChange={formik.handleChange}
+                disabled={!selectedState}
               >
                 <option value="">Select City</option>
-                <option value="City1">City 1</option>
-                <option value="City2">City 2</option>
+                {selectedState === "Rajasthan" && (
+                  <>
+                    <option value="Ajmer">Ajmer</option>
+                    <option value="Jaipur">Jaipur</option>
+                  </>
+                )}
+                {selectedState === "Delhi" && (
+                  <>
+                    <option value="Central Delhi">Central Delhi</option>
+                    <option value="New Delhi">New Delhi</option>
+                  </>
+                )}
+                {selectedState === "Mumbai" && (
+                  <>
+                    <option value="Pune">Pune</option>
+                    <option value="Thane">Thane</option>
+                  </>
+                )}
+                {selectedState === "Uttarpradesh" && (
+                  <>
+                    <option value="Meerut">Meerut</option>
+                    <option value="Ayodhya">Ayodhya</option>
+                  </>
+                )}
               </select>
+              {formik.errors.city && formik.touched.city && (
+                <div className="text-red-500">{formik.errors.city}</div>
+              )}
             </div>
 
             <div className="w-1/2 mr-2">
@@ -144,6 +252,11 @@ const StudentRegist = () => {
                   <option key={index}>{item.institutename}</option>
                 ))}
               </select>
+              {formik.errors.institutename && formik.touched.institutename && (
+                <div className="text-red-500">
+                  {formik.errors.institutename}
+                </div>
+              )}
             </div>
           </div>
 
@@ -156,10 +269,10 @@ const StudentRegist = () => {
             </button>
 
             <NavLink
-              to="/studentdata"
+              to="/"
               className="items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
             >
-              Cancle
+              Cancel
             </NavLink>
           </div>
         </form>
