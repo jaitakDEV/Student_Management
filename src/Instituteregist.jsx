@@ -18,8 +18,8 @@ const SignupSchema = Yup.object().shape({
   emailid: Yup.string().email("Invalid email").required("Required"),
   contactno: Yup.string()
     .matches(/^\d+$/, "Invalid phone number") // react expression to check string that consits only digit
-    .min(10, "Too Short!!")
-    .max(11, "Too Long")
+    .min(10, "Invalid!!")
+    .max(10, "Invalid!!")
     .required("Required"),
   state: Yup.string().required("Required"),
   city: Yup.string().required("Required"),
