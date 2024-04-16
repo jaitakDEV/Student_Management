@@ -58,7 +58,7 @@ const Instituteregist = () => {
       });
       setTimeout(function () {
         window.location.replace("/institutedata");
-      }, 5000);
+      }, 2000);
       formik.resetForm();
     },
   });

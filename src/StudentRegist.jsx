@@ -65,7 +65,7 @@ const StudentRegist = () => {
 
       setTimeout(function () {
         window.location.replace("/studentdata");
-      }, 5000);
+      }, 2000);
       formik.resetForm();
     },
   });
