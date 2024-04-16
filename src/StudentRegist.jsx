@@ -9,16 +9,18 @@ const SignupSchema = Yup.object().shape({
   firstname: Yup.string()
     .min(3, "Too short!!")
     .max(20, "Too Long!!")
-    .required("required"),
+    .required("Required")
+    .matches(/^[a-zA-Z]+$/, "Name must contain only alphabets"),
   lastname: Yup.string()
     .min(3, "Too Short!!")
     .max(20, "Too Long!!")
-    .required("required"),
+    .required("Required")
+    .matches(/^[a-zA-Z]+$/, "Name must contain only alphabets"),
   emailid: Yup.string().email("Invalid email").required("Required"),
   contactno: Yup.string()
     .matches(/^\d+$/, "Invalid phone number") // react expression to check string that consits only digit
-    .min(10, "Too Short!!")
-    .max(11, "Too Long")
+    .min(10, "Invalid!!")
+    .max(10, "Invalid!!")
     .required("Required"),
   address: Yup.string()
     .min(5, "Too Short!!")
@@ -54,7 +56,7 @@ const StudentRegist = () => {
       setsformdata([...sformdata, values]);
       toast.success(" Submitted!! ", {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

@@ -9,7 +9,8 @@ const SignupSchema = Yup.object().shape({
   institutename: Yup.string()
     .min(5, "Too Short!!")
     .max(20, "Too Long!!")
-    .required("Required"),
+    .required("Required")
+    .matches(/^[a-zA-Z\s]+$/, "Name must contain only alphabets and spaces"),
   address: Yup.string()
     .min(5, "Too Short!!")
     .max(35, "Too Long!!")
@@ -48,7 +49,7 @@ const Instituteregist = () => {
       setformdata([...formdata, values]);
       toast.success(" Submitted! ", {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
