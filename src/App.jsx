@@ -19,7 +19,7 @@ function App() {
       {/* <Institutedata /> */}
       {/* <StudentRegist /> */}
       {/* <Studentdata /> */}
-      <Routing basename="/Student_Management" />
+      <Routing />
     </>
   );
 }
